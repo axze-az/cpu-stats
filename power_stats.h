@@ -28,6 +28,7 @@ namespace power_stats {
         ~shm_seg();
         static
         std::string name(std::uint32_t pkg);
+    public:
         // powerstep of 5 W's
         static
         constexpr const double power_step=5;
@@ -36,7 +37,6 @@ namespace power_stats {
         // until we figure out
         static
         constexpr const double max_power=250;
-    public:
         enum {
             POWER_ENTRIES=uint32_t(max_power/power_step)+1
         };

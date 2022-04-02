@@ -125,7 +125,7 @@ to_stream(std::ostream& s, const shm_seg* p)
     }
     s << '\n';
     std::uint32_t lines=(cnt+cols-1)/cols;
-    double sum=0.0;
+    double sum=0.0, avg=0.0;
     for (std::uint32_t j=0; j<lines; ++j) {
         for (std::uint32_t i=0; i<cols; ++i) {
             std::size_t k=j+lines*i;
@@ -142,9 +142,12 @@ to_stream(std::ostream& s, const shm_seg* p)
               << std::setw(7) << std::setprecision(2) << pcti << ' '
               << std::setw(7) << std::setprecision(2) << spcti;
             sum +=pcti;
+            avg +=pcti*fi;
         }
         s << '\n';
     }
+    avg *= 1e-2;
+    s << "average frequency: ~" << std::setprecision(0) << avg << " MHz\n";
     if (std::fabs(sum-100) > 0.005) {
         s << "invalid sum " << sum << std::endl;
     }
