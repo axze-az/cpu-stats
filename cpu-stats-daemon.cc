@@ -206,5 +206,10 @@ int main(int argc, char** argv)
     }
     if (timeout < 1 || timeout > 60)
         usage(argv[0]);
+    if (getuid()!=0) {
+        std::cerr << argv[0]  << " must be root to work correctly"
+                  << std::endl;
+        std::exit(3);
+    }
     return daemon_main(foreground, timeout);
 }
