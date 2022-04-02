@@ -1,6 +1,12 @@
+cpu-stats (0.2.1) unstable; urgency=medium
+
+  * addition of average power and frequency outputs
+
+ -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 17:15:00 +0200
+
 cpu-stats (0.2.0) unstable; urgency=medium
 
-  * addition of an power statistics output
+  * addition of a power statistics output
 
  -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 09:10:00 +0200
 
