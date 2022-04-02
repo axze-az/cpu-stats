@@ -23,7 +23,7 @@ int write_pidfile()
     mode_t m;
     int lockfd;
     struct flock lck;
-    snprintf(fname, sizeof(fname), RUN_DIR "/cpufreq-stats-daemon.pid");
+    snprintf(fname, sizeof(fname), RUN_DIR "/cpu-stats-daemon.pid");
     m = umask(0);
     lockfd=open(fname, O_RDWR | O_CREAT,
                 S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
@@ -58,7 +58,7 @@ int write_pidfile()
 int daemon_main(bool foreground, std::uint32_t timeout)
 {
     try {
-        openlog("cpufreq-stats-daemon",
+        openlog("cpu-stats-daemon",
                 LOG_PID | (foreground ? LOG_PERROR :0), LOG_DAEMON);
         if (foreground == false) {
             if (daemon(0,0) < 0) {
