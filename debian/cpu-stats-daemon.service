@@ -1,0 +1,11 @@
+[Unit]
+Description=cpufreq statistics daemon
+
+[Service]
+ExecStart=/usr/sbin/cpu-stats-daemon -f
+IgnoreSIGPIPE=false
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

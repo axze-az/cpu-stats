@@ -1,0 +1,16 @@
+Source: cpu-stats
+Section: unknown
+Priority: optional
+Maintainer: axel <axel.zeuner@gmx.de>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/cpu-stats
+#Vcs-Git: https://salsa.debian.org/debian/cpu-stats.git
+Rules-Requires-Root: no
+
+Package: cpu-stats
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: cpufreq statistics daemon and client
+

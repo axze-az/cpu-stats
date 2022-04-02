@@ -1,0 +1,109 @@
+#include "tools.h"
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdexcept>
+#include <fstream>
+
+void*
+tools::shm::
+create(const std::string& fname, std::size_t s, mode_t m)
+{
+    tools::scoped_zero_umask um;
+    tools::file_handle fd(
+        shm_open(fname.c_str(), O_RDWR|O_CREAT|O_EXCL, m));
+    if (fd()==-1) {
+        std::string msg="could not create shm " + fname;
+        throw std::runtime_error(msg);
+    }
+    if (ftruncate(fd(), s)!=0) {
+        unlink(fname);
+        std::string msg="could not resize shm " + fname;
+        throw std::runtime_error(msg);
+    }
+    void* addr=mmap(nullptr,
+                    s,
+                    PROT_READ|PROT_WRITE,
+                    MAP_SHARED,
+                    fd(),
+                    0);
+    if (addr==nullptr) {
+        unlink(fname);
+        std::string msg="could not map shm " + fname;
+        throw std::runtime_error(msg);
+    }
+    return addr;
+}
+
+void*
+tools::shm::open_ro(const std::string& fname, std::size_t s)
+{
+    tools::file_handle fd(
+        shm_open(fname.c_str(), O_RDONLY, 0));
+    if (fd()==-1) {
+        std::string msg="could not open shm " + fname;
+        throw std::runtime_error(msg);
+    }
+    void* addr=mmap(nullptr,
+                    s,
+                    PROT_READ,
+                    MAP_SHARED,
+                    fd(),
+                    0);
+    if (addr==nullptr) {
+        std::string msg="could not map shm " + fname;
+        throw std::runtime_error(msg);
+    }
+    return addr;
+}
+
+void
+tools::shm::
+unmap(void* p, std::size_t s)
+{
+    munmap(p, s);
+}
+
+void
+tools::shm::
+unlink(const std::string& fname)
+{
+    shm_unlink(fname.c_str());
+}
+
+std::int32_t
+tools::file::read_int32_from(const std::string& fn)
+{
+    std::ifstream s(fn.c_str());
+    std::int32_t r=0;
+    s >> r;
+    return r;
+}
+
+std::int64_t
+tools::file::read_int64_from(const std::string& fn)
+{
+    std::ifstream s(fn.c_str());
+    std::int64_t r=0;
+    s >> r;
+    return r;
+}
+
+double
+tools::file::read_double_from(const std::string& fn)
+{
+    std::ifstream s(fn.c_str());
+    double r=0.0;
+    s >> r;
+    return r;
+}
+
+bool
+tools::file::exists(const std::string& fn)
+{
+    struct stat st;
+    bool r=false;
+    if (stat(fn.c_str(), &st) == 0)
+        r=true;
+    return r;
+}
