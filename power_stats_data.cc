@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <syslog.h>
 
 power_stats::data::data(bool create)
     : _v(),
@@ -59,6 +60,12 @@ power_stats::data::update(std::uint32_t tmo_sec)
         // std::cout << "e_now: " << e_now;
         std::uint64_t e_last=_v_energy_uj[i];
         // std::cout << " e_last: " << e_last;
+        if (e_now <= e_last) {
+            syslog(LOG_INFO,
+                   "power_stats: reading from rapl: "
+                   "now: %lu last: %lu with timeout %u",
+                   e_now, e_last, tmo_sec);
+        }
         _v_energy_uj[i]=e_now;
         // conversion factor between ujoule and joule and
         // division by time to obtain power in watt
@@ -66,6 +73,13 @@ power_stats::data::update(std::uint32_t tmo_sec)
         double p_in_w = (e_now - e_last)*factor;
         // std::cout << " p in w: " << p_in_w;
         size_t idx=shm_seg::power_to_idx(p_in_w);
+        if ((idx>=shm_seg::POWER_ENTRIES-1) ||
+            (p_in_w > shm_seg::max_power)) {
+            syslog(LOG_INFO,
+                   "power_stats: reading from rapl: "
+                   "now: %lu last: %lu with timeout %u and p: %f",
+                   e_now, e_last, tmo_sec, p_in_w);
+        }
         // std::cout << " idx: " << idx << std::endl;
         std::uint32_t* pi=p->begin() + idx;
         ++(*pi);
