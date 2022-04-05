@@ -1,3 +1,9 @@
+cpu-stats (0.2.4) unstable; urgency=medium
+
+  * replace cpufreq with cpu in the systemd unit file
+
+ -- axel <axel.zeuner@gmx.de>  Mon, 05 Apr 2022 08:45:00 +0200
+
 cpu-stats (0.2.3) unstable; urgency=medium
 
   * fix counter overflows during power readings
