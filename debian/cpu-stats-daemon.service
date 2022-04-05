@@ -1,5 +1,5 @@
 [Unit]
-Description=cpufreq statistics daemon
+Description=cpu statistics daemon
 
 [Service]
 ExecStart=/usr/sbin/cpu-stats-daemon -f
