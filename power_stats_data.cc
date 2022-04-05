@@ -8,7 +8,7 @@
 
 power_stats::data::data(bool create)
     : _v(),
-      _v_energy_uj(),
+      _vp(),
       _create(create)
 {
     try {
@@ -17,7 +17,13 @@ power_stats::data::data(bool create)
                 shm_seg* p=shm_seg::create(i);
                 _v.push_back(p);
                 std::uint64_t e=pkg::energy_uj(i);
-                _v_energy_uj.push_back(e);
+                std::uint64_t me=pkg::max_energy_range_uj(i);
+                syslog(LOG_INFO,
+                       "power_stats: "
+                       "max_energy_range_uj: %lu ",
+                       me);
+                priv_data pd{e, me};
+                _vp.emplace_back(pd);
             } else {
                 const shm_seg* p=shm_seg::open(i);
                 _v.push_back(p);
@@ -58,19 +64,22 @@ power_stats::data::update(std::uint32_t tmo_sec)
         shm_seg* p=const_cast<shm_seg*>(_v[i]);
         std::uint64_t e_now=pkg::energy_uj(p->pkg());
         // std::cout << "e_now: " << e_now;
-        std::uint64_t e_last=_v_energy_uj[i];
+        std::uint64_t e_last=_vp[i]._energy_uj;
+        _vp[i]._energy_uj=e_now;
         // std::cout << " e_last: " << e_last;
-        if (e_now <= e_last) {
+        std::uint64_t e_1 = e_now, e_0 = e_last;
+        if (e_now < e_last) {
+            e_1 = (_vp[i]._max_energy_range_uj - e_last) + e_now;
+            e_0 = 0;
             syslog(LOG_INFO,
                    "power_stats: reading from rapl: "
                    "now: %lu last: %lu with timeout %u",
                    e_now, e_last, tmo_sec);
         }
-        _v_energy_uj[i]=e_now;
         // conversion factor between ujoule and joule and
         // division by time to obtain power in watt
         double factor= 1.0e-6/double(tmo_sec);
-        double p_in_w = (e_now - e_last)*factor;
+        double p_in_w = (e_1 - e_0)*factor;
         // std::cout << " p in w: " << p_in_w;
         size_t idx=shm_seg::power_to_idx(p_in_w);
         if ((idx>=shm_seg::POWER_ENTRIES-1) ||
@@ -79,6 +88,10 @@ power_stats::data::update(std::uint32_t tmo_sec)
                    "power_stats: reading from rapl: "
                    "now: %lu last: %lu with timeout %u and p: %f",
                    e_now, e_last, tmo_sec, p_in_w);
+            syslog(LOG_INFO,
+                   "power_stats: reading from rapl: "
+                   "e_0: %lu e_1: %lu max: %lu",
+                   e_0, e_1, _vp[i]._max_energy_range_uj);
         }
         // std::cout << " idx: " << idx << std::endl;
         std::uint32_t* pi=p->begin() + idx;

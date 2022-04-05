@@ -21,6 +21,10 @@ namespace power_stats {
         static
         std::uint64_t
         energy_uj(std::uint32_t no);
+
+        static
+        std::uint64_t
+        max_energy_range_uj(std::uint32_t no);
     };
 
     class shm_seg {
@@ -79,7 +83,11 @@ namespace power_stats {
 
     struct data {
         std::vector<const shm_seg*> _v;
-        std::vector<std::uint64_t> _v_energy_uj;
+        struct priv_data {
+            std::uint64_t _energy_uj;
+            std::uint64_t _max_energy_range_uj;
+        };
+        std::vector<priv_data> _vp;
         bool _create;
 
         static

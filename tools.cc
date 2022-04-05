@@ -71,33 +71,6 @@ unlink(const std::string& fname)
     shm_unlink(fname.c_str());
 }
 
-std::int32_t
-tools::file::read_int32_from(const std::string& fn)
-{
-    std::ifstream s(fn.c_str());
-    std::int32_t r=0;
-    s >> r;
-    return r;
-}
-
-std::int64_t
-tools::file::read_int64_from(const std::string& fn)
-{
-    std::ifstream s(fn.c_str());
-    std::int64_t r=0;
-    s >> r;
-    return r;
-}
-
-double
-tools::file::read_double_from(const std::string& fn)
-{
-    std::ifstream s(fn.c_str());
-    double r=0.0;
-    s >> r;
-    return r;
-}
-
 bool
 tools::file::exists(const std::string& fn)
 {

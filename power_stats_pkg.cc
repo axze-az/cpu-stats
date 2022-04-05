@@ -20,14 +20,20 @@ std::uint32_t
 power_stats::pkg::enabled(std::uint32_t no)
 {
     std::string p=path(no) + "enabled";
-    return tools::file::read_int32_from(p);
+    return tools::file::read<std::int32_t>::from(p);
 }
 
 std::uint64_t
 power_stats::pkg::energy_uj(std::uint32_t no)
 {
     std::string p=path(no) + "energy_uj";
-    return tools::file::read_int64_from(p);
+    return tools::file::read<std::uint64_t>::from(p);
 }
 
+std::uint64_t
+power_stats::pkg::max_energy_range_uj(std::uint32_t no)
+{
+    std::string p=path(no) + "max_energy_range_uj";
+    return tools::file::read<std::uint64_t>::from(p);
+}
 

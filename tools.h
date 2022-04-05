@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <cstddef>
 #include <string>
+#include <fstream>
 
 namespace tools {
 
@@ -67,12 +68,15 @@ namespace tools {
     };
 
     namespace file {
-        int32_t
-        read_int32_from(const std::string& fn);
-        int64_t
-        read_int64_from(const std::string& fn);
-        double
-        read_double_from(const std::string& fn);
+
+        // helper struct to read<_T>::from files
+        template <typename _T>
+        struct read {
+            static
+            _T
+            from(const std::string& fn);
+        };
+
         bool
         exists(const std::string& fn);
     }
@@ -147,5 +151,16 @@ tools::file_handle::operator()() const
 {
     return _fd;
 }
+
+template <typename _T>
+_T
+tools::file::read<_T>::from(const std::string& fn)
+{
+    std::ifstream s(fn.c_str());
+    _T r(0);
+    s >> r;
+    return r;
+}
+
 
 #endif
