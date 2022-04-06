@@ -12,8 +12,8 @@ power_stats::data::data(bool create)
       _create(create)
 {
     try {
-        for (size_t i=0; pkg::exists(i); ++i) {
-            if (_create) {
+        if (_create) {
+            for (size_t i=0; pkg::exists(i); ++i) {
                 shm_seg* p=shm_seg::create(i);
                 _v.push_back(p);
                 std::uint64_t e=pkg::energy_uj(i);
@@ -22,7 +22,9 @@ power_stats::data::data(bool create)
                        "power_stats: max_energy_range_uj: %lu ", me);
                 priv_data pd{e, me};
                 _vp.emplace_back(pd);
-            } else {
+            }
+        } else {
+            for (size_t i=0; pkg::exists(i); ++i) {
                 const shm_seg* p=shm_seg::open(i);
                 _v.push_back(p);
             }
