@@ -71,7 +71,7 @@ power_stats::data::update(std::uint32_t tmo_sec)
             e_0 = 0;
             syslog(LOG_INFO,
                    "power_stats: correction of counter overflow "
-                   "now: %lu last: %lu with timeout %u ",
+                   "now: %lu last: %lu with timeout %u "
                    "e_1: %lu e_0: %lu",
                    e_now, e_last, tmo_sec, e_1, e_0);
         }
