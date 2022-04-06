@@ -19,9 +19,7 @@ power_stats::data::data(bool create)
                 std::uint64_t e=pkg::energy_uj(i);
                 std::uint64_t me=pkg::max_energy_range_uj(i);
                 syslog(LOG_INFO,
-                       "power_stats: "
-                       "max_energy_range_uj: %lu ",
-                       me);
+                       "power_stats: max_energy_range_uj: %lu ", me);
                 priv_data pd{e, me};
                 _vp.emplace_back(pd);
             } else {
@@ -72,9 +70,10 @@ power_stats::data::update(std::uint32_t tmo_sec)
             e_1 = (_vp[i]._max_energy_range_uj - e_last) + e_now;
             e_0 = 0;
             syslog(LOG_INFO,
-                   "power_stats: reading from rapl: "
-                   "now: %lu last: %lu with timeout %u",
-                   e_now, e_last, tmo_sec);
+                   "power_stats: correction of counter overflow "
+                   "now: %lu last: %lu with timeout %u ",
+                   "e_1: %lu e_0: %lu",
+                   e_now, e_last, tmo_sec, e_1, e_0);
         }
         // conversion factor between ujoule and joule and
         // division by time to obtain power in watt
