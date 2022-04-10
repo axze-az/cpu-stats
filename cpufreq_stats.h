@@ -100,7 +100,7 @@ namespace cpufreq_stats {
 
         static
         void
-        to_stream(std::ostream& s, const shm_seg* p);
+        to_stream(std::ostream& s, const shm_seg* p, bool short_output);
     public:
         data(bool create);
         ~data();
@@ -112,7 +112,7 @@ namespace cpufreq_stats {
         update();
         // dump the data
         void
-        to_stream(std::ostream& s);
+        to_stream(std::ostream& s, bool short_output=false);
     };
 
 }

@@ -60,7 +60,7 @@ cpufreq_stats::data::update()
 
 void
 cpufreq_stats::data::
-to_stream(std::ostream& s, const shm_seg* p)
+to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 {
     std::uint32_t cpu;
     double min_f, max_f;
@@ -118,12 +118,14 @@ to_stream(std::ostream& s, const shm_seg* p)
       << ", max_f=" << max_f/1000
       << ", samples=" << std::scientific << std::setprecision(22) << sum_ti
       << std::fixed << '\n';
-    for (std::uint32_t i=0; i<cols; ++i) {
-        if (i)
-            s << " | ";
-        s << "f/MHz       %   sum % ";
+    if (!short_output) {
+        for (std::uint32_t i=0; i<cols; ++i) {
+            if (i)
+                s << " | ";
+            s << "f/MHz       %   sum % ";
+        }
+        s << '\n';
     }
-    s << '\n';
     std::uint32_t lines=(cnt+cols-1)/cols;
     double sum=0.0, avg=0.0;
     for (std::uint32_t j=0; j<lines; ++j) {
@@ -136,15 +138,18 @@ to_stream(std::ostream& s, const shm_seg* p)
             fi /= 1000;
             double pcti=vpct[k];
             double spcti=vspct[k];
-            if (i)
-                s << "  | ";
-            s << std::setw(5) << std::setprecision(0) << fi << ' '
-              << std::setw(7) << std::setprecision(2) << pcti << ' '
-              << std::setw(7) << std::setprecision(2) << spcti;
+            if (!short_output) {
+                if (i)
+                    s << "  | ";
+                s << std::setw(5) << std::setprecision(0) << fi << ' '
+                << std::setw(7) << std::setprecision(2) << pcti << ' '
+                << std::setw(7) << std::setprecision(2) << spcti;
+            }
             sum +=pcti;
             avg +=pcti*fi;
         }
-        s << '\n';
+        if (!short_output)
+            s << '\n';
     }
     avg *= 1e-2;
     s << "average frequency: ~" << std::setprecision(0) << avg << " MHz\n";
@@ -154,9 +159,9 @@ to_stream(std::ostream& s, const shm_seg* p)
 }
 
 void
-cpufreq_stats::data::to_stream(std::ostream& s)
+cpufreq_stats::data::to_stream(std::ostream& s, bool short_output)
 {
     for (std::size_t i=0; i<_v.size(); ++i) {
-        to_stream(s, _v[i]);
+        to_stream(s, _v[i], short_output);
     }
 }

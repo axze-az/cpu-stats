@@ -92,7 +92,7 @@ namespace power_stats {
 
         static
         void
-        to_stream(std::ostream& s, const shm_seg* p);
+        to_stream(std::ostream& s, const shm_seg* p, bool short_output);
     public:
         data(bool create);
         ~data();
@@ -104,7 +104,7 @@ namespace power_stats {
         update(std::uint32_t tmo_sec);
         // dump the data
         void
-        to_stream(std::ostream& s);
+        to_stream(std::ostream& s, bool short_output=false);
     };
 }
 

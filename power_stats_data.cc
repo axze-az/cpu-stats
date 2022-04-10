@@ -102,7 +102,7 @@ power_stats::data::update(std::uint32_t tmo_sec)
 
 void
 power_stats::data::
-to_stream(std::ostream& s, const shm_seg* p)
+to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 {
     std::uint32_t vt[shm_seg::POWER_ENTRIES];
     std::uint32_t pkg= p->pkg();
@@ -189,9 +189,9 @@ to_stream(std::ostream& s, const shm_seg* p)
 }
 
 void
-power_stats::data::to_stream(std::ostream& s)
+power_stats::data::to_stream(std::ostream& s, bool short_output)
 {
     for (std::size_t i=0; i<_v.size(); ++i) {
-        to_stream(s, _v[i]);
+        to_stream(s, _v[i], short_output);
     }
 }

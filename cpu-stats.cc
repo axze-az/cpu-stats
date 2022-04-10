@@ -1,12 +1,20 @@
 #include "cpufreq_stats.h"
 #include "power_stats.h"
 #include <iostream>
+#include <string_view>
 
-int main()
+int main(int argc, char** argv)
 {
+    bool short_output=false;
+    if (argc > 1) {
+        std::string_view ag1(argv[1]);
+        if (ag1=="-s" || ag1=="--short") {
+            short_output=true;
+        }
+    }
     try {
         power_stats::data dta(false);
-        dta.to_stream(std::cout);
+        dta.to_stream(std::cout, short_output);
     }
     catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
@@ -14,7 +22,7 @@ int main()
     }
     try {
         cpufreq_stats::data dta(false);
-        dta.to_stream(std::cout);
+        dta.to_stream(std::cout, short_output);
     }
     catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
