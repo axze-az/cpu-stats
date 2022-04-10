@@ -138,9 +138,6 @@ int daemon_main(bool foreground, std::uint32_t timeout)
                 }
             } else {
                 switch (wr) {
-                case SIGALRM:
-                    f_dta.update();
-                    break;
                 case SIGTERM:
                 case SIGINT:
                 case SIGQUIT:
