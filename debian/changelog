@@ -1,3 +1,9 @@
+cpu-stats (0.2.5) unstable; urgency=medium
+
+  * allow short output from cpu-stats using -s option
+
+ -- axel <axel.zeuner@gmx.de>  Sun, 10 Apr 2022 07:45:00 +0200
+
 cpu-stats (0.2.4) unstable; urgency=medium
 
   * replace cpufreq with cpu in the systemd unit file
