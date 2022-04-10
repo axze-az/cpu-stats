@@ -58,42 +58,46 @@ int write_pidfile()
 int daemon_main(bool foreground, std::uint32_t timeout)
 {
     try {
+        if (geteuid()!=0) {
+            std::cerr << "this program requires root rights for access "
+                         "to rapl data"
+                      << std::endl;
+            std::exit(3);
+        }
         openlog("cpu-stats-daemon",
                 LOG_PID | (foreground ? LOG_PERROR :0), LOG_DAEMON);
         if (foreground == false) {
             if (daemon(0,0) < 0) {
                 syslog(LOG_ERR, "Cannot daemonize");
-                exit(3);
+                std::exit(3);
             }
         }
         /* int lock_fd=-1; */
-        if (getuid()==0) {
-            write_pidfile();
-            int nr=nice(-20);
-            if (nr != -20) {
-                syslog(LOG_WARNING, "Could not set nice(-20)");
-            }
-#if 0
-            struct passwd *pwe;
-            struct group *ge;
-            if ((pwe = getpwnam("daemon")) == NULL) {
-                syslog(LOG_ERR, "Cannot get uid for daemon");
-                exit(3);
-            }
-            uid_t daemon_uid = pwe->pw_uid;
-            if ((ge = getgrnam("daemon")) == NULL)
-                syslog(LOG_ERR, "Cannot get gid for daemon");
-            gid_t daemon_gid = ge->gr_gid;
-            if (setegid(daemon_gid)!=0) {
-                syslog(LOG_ERR, "Cannot set gid for daemon");
-                exit(3);
-            }
-            if (seteuid(daemon_uid)!=0) {
-                syslog(LOG_ERR, "Cannot set uid for daemon");
-                exit(3);
-            }
-#endif
+        write_pidfile();
+        int nr=nice(-20);
+        if (nr != -20) {
+            syslog(LOG_WARNING, "Could not set nice(-20)");
         }
+#if 0
+        struct passwd *pwe;
+        struct group *ge;
+        if ((pwe = getpwnam("daemon")) == NULL) {
+            syslog(LOG_ERR, "Cannot get uid for daemon");
+            std::exit(3);
+        }
+        uid_t daemon_uid = pwe->pw_uid;
+        if ((ge = getgrnam("daemon")) == NULL)
+            syslog(LOG_ERR, "Cannot get gid for daemon");
+        gid_t daemon_gid = ge->gr_gid;
+        if (setegid(daemon_gid)!=0) {
+            syslog(LOG_ERR, "Cannot set gid for daemon");
+            std::exit(3);
+        }
+        if (seteuid(daemon_uid)!=0) {
+            syslog(LOG_ERR, "Cannot set uid for daemon");
+            std::exit(3);
+        }
+#endif
         // block all signals
         tools::block_signals blk;
         timer_t timerid;
