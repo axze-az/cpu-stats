@@ -20,29 +20,27 @@
 int write_pidfile()
 {
     char fname[PATH_MAX];
-    mode_t m;
-    int lockfd;
-    struct flock lck;
     snprintf(fname, sizeof(fname), RUN_DIR "/cpu-stats-daemon.pid");
-    m = umask(0);
-    lockfd=open(fname, O_RDWR | O_CREAT,
-                S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+    mode_t m = umask(0);
+    int lockfd=open(fname, O_RDWR | O_CREAT,
+                    S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
     if ( lockfd > -1 ) {
+        struct flock lck;
         lck.l_type = F_WRLCK;
         lck.l_whence = SEEK_SET;
         lck.l_start = 0;
         lck.l_len = 0;
         if ((fcntl(lockfd, F_SETLK, &lck)<0) ||
-            (fcntl (lockfd, F_SETFD, FD_CLOEXEC)< 0)) {
+            (fcntl(lockfd, F_SETFD, FD_CLOEXEC)< 0)) {
             int t=-errno;
             close(lockfd);
             lockfd=t;
         } else {
             char pidbuf[64];
             ssize_t s=snprintf(pidbuf,sizeof(pidbuf),
-                                "%ld\n", (long)getpid());
-            if ((s >= (ssize_t)sizeof(pidbuf)) ||
-                (write(lockfd,pidbuf,s) != s)) {
+                                "%ld\n", long(getpid()));
+            if ((s >= ssize_t(sizeof(pidbuf))) ||
+                (write(lockfd, pidbuf, s) != s)) {
                 int t=-errno;
                 close(lockfd);
                 lockfd=t;
@@ -73,7 +71,10 @@ int daemon_main(bool foreground, std::uint32_t timeout)
             }
         }
         /* int lock_fd=-1; */
-        write_pidfile();
+        if (int pid_fd=write_pidfile()<0) {
+            syslog(LOG_ERR, "could not write pid file, errno %i\n", -pid_fd);
+            std::exit(3);
+        }
         int nr=nice(-20);
         if (nr != -20) {
             syslog(LOG_WARNING, "Could not set nice(-20)");
@@ -151,7 +152,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         }
         {
             std::ostringstream os;
-            p_dta.to_stream(os);
+            p_dta.to_stream(os, false);
             std::istringstream is(os.str());
             std::string l;
             while (std::getline(is, l).good()) {
@@ -160,7 +161,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         }
         {
             std::ostringstream os;
-            f_dta.to_stream(os);
+            f_dta.to_stream(os, false);
             std::istringstream is(os.str());
             std::string l;
             while (std::getline(is, l).good()) {
