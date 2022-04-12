@@ -56,7 +56,8 @@ power_stats::data::~data()
 }
 
 void
-power_stats::data::update(std::uint32_t tmo_sec)
+power_stats::data::
+update(std::uint32_t tmo_sec, std::uint32_t weight)
 {
     if (_create == false)
         return;
@@ -96,7 +97,7 @@ power_stats::data::update(std::uint32_t tmo_sec)
         }
         // std::cout << " idx: " << idx << std::endl;
         std::uint32_t* pi=p->begin() + idx;
-        ++(*pi);
+        (*pi)+=weight;
     }
 }
 

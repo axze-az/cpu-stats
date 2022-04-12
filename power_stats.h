@@ -101,7 +101,7 @@ namespace power_stats {
         operator=(const data& r) = delete;
         // update _v
         void
-        update(std::uint32_t tmo_sec);
+        update(std::uint32_t tmo_sec, std::uint32_t weight);
         // dump the data
         void
         to_stream(std::ostream& s, bool short_output=false);

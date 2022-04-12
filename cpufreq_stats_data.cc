@@ -45,7 +45,7 @@ cpufreq_stats::data::~data()
 }
 
 void
-cpufreq_stats::data::update()
+cpufreq_stats::data::update(std::uint32_t weight)
 {
     if (_create == false)
         return;
@@ -54,7 +54,7 @@ cpufreq_stats::data::update()
         double cur_f=cpu::cur_freq(p->cpu());
         size_t idx=shm_seg::freq_to_idx(cur_f);
         std::uint32_t* pi=p->begin() + idx;
-        ++(*pi);
+        (*pi)+=weight;
     }
 }
 

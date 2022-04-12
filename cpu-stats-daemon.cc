@@ -130,12 +130,16 @@ int daemon_main(bool foreground, std::uint32_t timeout)
             if (wr==sev.sigev_signo && si.si_value.sival_ptr==&timerid) {
                 int tmr_or=timer_getoverrun(timerid);
                 if (tmr_or != -1) {
-                    for (int i=0; i<=tmr_or; ++i)
-                        f_dta.update();
-                    p_dta.update((tmr_or+1)*timeout);
+                    std::uint32_t weight=tmr_or+1;
+                    f_dta.update(weight);
+                    p_dta.update(weight*timeout, weight);
+                    if (weight > 1) {
+                        syslog(LOG_WARNING,
+                               "timer_getoverrun() returned %d", tmr_or);
+                    }
                 } else {
-                    // log an error here later
-                    f_dta.update();
+                    syslog(LOG_ERR,
+                           "timer_getoverrun() errno=%d", errno);
                 }
             } else {
                 switch (wr) {

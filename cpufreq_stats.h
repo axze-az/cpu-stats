@@ -109,7 +109,7 @@ namespace cpufreq_stats {
         operator=(const data& r) = delete;
         // update _v
         void
-        update();
+        update(std::uint32_t weight);
         // dump the data
         void
         to_stream(std::ostream& s, bool short_output=false);
