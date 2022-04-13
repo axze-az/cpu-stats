@@ -21,7 +21,7 @@ power_stats::data::data(bool create)
                 syslog(LOG_INFO,
                        "power_stats: max_energy_range_uj: %lu ", me);
                 priv_data pd{e, me};
-                _vp.emplace_back(pd);
+                _vp.push_back(pd);
             }
         } else {
             for (size_t i=0; pkg::exists(i); ++i) {
