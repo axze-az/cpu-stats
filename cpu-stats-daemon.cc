@@ -21,7 +21,7 @@ int write_pidfile()
 {
     char fname[PATH_MAX];
     snprintf(fname, sizeof(fname), RUN_DIR "/cpu-stats-daemon.pid");
-    mode_t m = umask(0);
+    tools::scoped_zero_umask zero_umask;
     int lockfd=open(fname, O_RDWR | O_CREAT,
                     S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
     if ( lockfd > -1 ) {
@@ -49,7 +49,6 @@ int write_pidfile()
     } else {
         lockfd = -errno;
     }
-    umask(m);
     return lockfd;
 }
 
@@ -127,7 +126,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         bool done=false;
         while (!done) {
             int wr=sigwaitinfo(&s, &si);
-            if (wr==sev.sigev_signo && si.si_value.sival_ptr==&timerid) {
+            if ((wr==sev.sigev_signo) && (si.si_value.sival_ptr==&timerid)) {
                 int tmr_or=timer_getoverrun(timerid);
                 if (tmr_or != -1) {
                     std::uint32_t weight=tmr_or+1;
