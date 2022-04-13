@@ -24,7 +24,7 @@ int write_pidfile()
     tools::scoped_zero_umask zero_umask;
     int lockfd=open(fname, O_RDWR | O_CREAT,
                     S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-    if ( lockfd > -1 ) {
+    if (lockfd > -1) {
         struct flock lck;
         lck.l_type = F_WRLCK;
         lck.l_whence = SEEK_SET;
