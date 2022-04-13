@@ -55,12 +55,6 @@ int write_pidfile()
 int daemon_main(bool foreground, std::uint32_t timeout)
 {
     try {
-        if (geteuid()!=0) {
-            std::cerr << "this program requires root rights for access "
-                         "to rapl data"
-                      << std::endl;
-            std::exit(3);
-        }
         openlog("cpu-stats-daemon",
                 LOG_PID | (foreground ? LOG_PERROR :0), LOG_DAEMON);
         if (foreground == false) {
@@ -211,8 +205,9 @@ int main(int argc, char** argv)
     }
     if (timeout < 1 || timeout > 60)
         usage(argv[0]);
-    if (getuid()!=0) {
-        std::cerr << argv[0]  << " must be root to work correctly"
+    if (geteuid()!=0) {
+        std::cerr << "this program requires root rights for access "
+                     "to rapl data"
                   << std::endl;
         std::exit(3);
     }
