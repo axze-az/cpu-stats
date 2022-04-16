@@ -13,7 +13,7 @@ CXX=g++
 CXXFLAGS=-pipe -std=gnu++20 -O2 -fomit-frame-pointer -Wall -I.
 #CXXFLAGS+= -ffunction-sections -fdata-sections
 LD=$(CXX)
-LIBS=-lrt -lpthread
+LIBS=-L. -lcpustats -lrt -lpthread
 LDFLAGS=$(CXXFLAGS) $(STRIP) #-static-libstdc++
 OBJS= \
 cpufreq_stats_cpu.o \
@@ -24,14 +24,17 @@ power_stats_shm_seg.o \
 power_stats_data.o \
 tools.o
 
-cpu-stats-daemon: cpu-stats-daemon.o $(OBJS)
-	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
+cpu-stats-daemon: cpu-stats-daemon.o libcpustats.a
+	$(LD) $(LDFLAGS) -o $@ $< $(LIBS)
 
-cpu-stats: cpu-stats.o $(OBJS)
-	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
+cpu-stats: cpu-stats.o libcpustats.a
+	$(LD) $(LDFLAGS) -o $@ $< $(LIBS)
+
+libcpustats.a: $(OBJS)
+	$(AR) r $@ $?
 
 clean:
-	-$(RM) cpu-stats-daemon cpu-stats *.o *.s
+	-$(RM) cpu-stats-daemon cpu-stats libcpustats.a *.o *.s
 
 distclean: clean
 	-$(RM) *~
