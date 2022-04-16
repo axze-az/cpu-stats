@@ -17,37 +17,33 @@
 
 #define RUN_DIR "/run"
 
-int write_pidfile()
+tools::file_handle write_pidfile()
 {
     char fname[PATH_MAX];
     snprintf(fname, sizeof(fname), RUN_DIR "/cpu-stats-daemon.pid");
     tools::scoped_zero_umask zero_umask;
-    int lockfd=open(fname, O_RDWR | O_CREAT,
-                    S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
-    if (lockfd > -1) {
+    tools::file_handle lockfd=open(fname, O_RDWR | O_CREAT,
+        S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+    if (lockfd() > -1) {
         struct flock lck;
         lck.l_type = F_WRLCK;
         lck.l_whence = SEEK_SET;
         lck.l_start = 0;
         lck.l_len = 0;
-        if ((fcntl(lockfd, F_SETLK, &lck)<0) ||
-            (fcntl(lockfd, F_SETFD, FD_CLOEXEC)< 0)) {
-            int t=-errno;
-            close(lockfd);
-            lockfd=t;
+        if ((fcntl(lockfd(), F_SETLK, &lck)<0) ||
+            (fcntl(lockfd(), F_SETFD, FD_CLOEXEC)< 0)) {
+            lockfd=tools::file_handle(-errno);
         } else {
             char pidbuf[64];
             ssize_t s=snprintf(pidbuf,sizeof(pidbuf),
                                 "%ld\n", long(getpid()));
             if ((s >= ssize_t(sizeof(pidbuf))) ||
-                (write(lockfd, pidbuf, s) != s)) {
-                int t=-errno;
-                close(lockfd);
-                lockfd=t;
+                (write(lockfd(), pidbuf, s) != s)) {
+                lockfd=tools::file_handle(-errno);
             }
         }
     } else {
-        lockfd = -errno;
+        lockfd=tools::file_handle(-errno);
     }
     return lockfd;
 }
@@ -64,8 +60,9 @@ int daemon_main(bool foreground, std::uint32_t timeout)
             }
         }
         /* int lock_fd=-1; */
-        if (int pid_fd=write_pidfile()<0) {
-            syslog(LOG_ERR, "could not write pid file, errno %i\n", -pid_fd);
+        tools::file_handle pid_fd=write_pidfile();
+        if (pid_fd()<0) {
+            syslog(LOG_ERR, "could not write pid file, errno %i\n", -pid_fd());
             std::exit(3);
         }
         int nr=nice(-20);
