@@ -19,8 +19,7 @@
 
 tools::file_handle write_pidfile()
 {
-    char fname[PATH_MAX];
-    snprintf(fname, sizeof(fname), RUN_DIR "/cpu-stats-daemon.pid");
+    const char* fname=RUN_DIR "/cpu-stats-daemon.pid";
     tools::scoped_zero_umask zero_umask;
     tools::file_handle lockfd=open(fname, O_RDWR | O_CREAT,
         S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
@@ -34,11 +33,11 @@ tools::file_handle write_pidfile()
             (fcntl(lockfd(), F_SETFD, FD_CLOEXEC)< 0)) {
             lockfd=tools::file_handle(-errno);
         } else {
-            char pidbuf[64];
-            ssize_t s=snprintf(pidbuf,sizeof(pidbuf),
-                                "%ld\n", long(getpid()));
-            if ((s >= ssize_t(sizeof(pidbuf))) ||
-                (write(lockfd(), pidbuf, s) != s)) {
+            std::ostringstream pids;
+            pids << getpid();
+            std::string pidbuf(pids.str());
+            ssize_t s=pidbuf.length();
+            if (write(lockfd(), pidbuf.c_str(), s) != s) {
                 lockfd=tools::file_handle(-errno);
             }
         }
