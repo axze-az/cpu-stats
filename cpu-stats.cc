@@ -10,6 +10,10 @@ int main(int argc, char** argv)
         std::string_view ag1(argv[1]);
         if (ag1=="-s" || ag1=="--short") {
             short_output=true;
+        } else {
+            std::cerr << argv[0] << " [-s|--short]\n"
+                      << "-s|--short  requests short output\n";
+            return 3;
         }
     }
     try {
