@@ -61,7 +61,8 @@ namespace tools {
         void*
         open_ro(const std::string& fname, std::size_t s);
         // unmap p
-        void unmap(void* p, std::size_t s);
+        void
+        unmap(void* p, std::size_t s);
         // delete file name
         void
         unlink(const std::string& fname);
