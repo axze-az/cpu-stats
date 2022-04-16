@@ -6,6 +6,21 @@
 #include <fstream>
 #include <iostream>
 
+tools::iarraybuf::
+iarraybuf(const char* base, size_t size)
+{
+    char* p=const_cast<char*>(base);
+    this->setg(p, p, p + size);
+}
+
+tools::iarraystream::
+iarraystream(const char* base, size_t size)
+    : iarraybuf(base, size),
+      std::istream(static_cast<std::streambuf*>(this))
+{
+}
+
+
 void*
 tools::shm::
 create(const std::string& fname, std::size_t s, mode_t m)
@@ -28,7 +43,7 @@ create(const std::string& fname, std::size_t s, mode_t m)
                     MAP_SHARED,
                     fd(),
                     0);
-    if (addr==nullptr) {
+    if (addr==MAP_FAILED) {
         unlink(fname);
         std::string msg="could not map shm " + fname;
         throw std::runtime_error(msg);
@@ -51,7 +66,7 @@ tools::shm::open_ro(const std::string& fname, std::size_t s)
                     MAP_SHARED,
                     fd(),
                     0);
-    if (addr==nullptr) {
+    if (addr==MAP_FAILED) {
         std::string msg="could not map shm " + fname;
         throw std::runtime_error(msg);
     }
@@ -72,9 +87,18 @@ unlink(const std::string& fname)
     shm_unlink(fname.c_str());
 }
 
-#if 0
+bool
+tools::file::exists(const std::string& fn)
+{
+    struct stat st;
+    bool r=false;
+    if (stat(fn.c_str(), &st) == 0)
+        r=true;
+    return r;
+}
+
 std::string
-tools::file::read<std::string>::from(const std::string& fn)
+tools::sys_fs::read<std::string>::from(const std::string& fn)
 {
     std::string r;
     file_handle fd=open(fn.c_str(), O_RDONLY);
@@ -93,14 +117,4 @@ tools::file::read<std::string>::from(const std::string& fn)
     }
     return r;
 }
-#endif
 
-bool
-tools::file::exists(const std::string& fn)
-{
-    struct stat st;
-    bool r=false;
-    if (stat(fn.c_str(), &st) == 0)
-        r=true;
-    return r;
-}

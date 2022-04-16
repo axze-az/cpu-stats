@@ -24,7 +24,7 @@ cpufreq_stats::cpu::online(std::uint32_t cpu)
     if (cpu==0)
         return true;
     std::string p=path(cpu)+"online";
-    int r=tools::file::read<std::int32_t>::from(p);
+    int r=tools::sys_fs::read<std::int32_t>::from(p);
     return r!=0;
 }
 
@@ -32,14 +32,14 @@ double
 cpufreq_stats::cpu::max_freq(std::uint32_t cpu)
 {
     std::string p=path(cpu)+"cpufreq/cpuinfo_max_freq";
-    return tools::file::read<double>::from(p);
+    return tools::sys_fs::read<double>::from(p);
 }
 
 double
 cpufreq_stats::cpu::min_freq(std::uint32_t cpu)
 {
     std::string p=path(cpu)+"cpufreq/cpuinfo_min_freq";
-    return tools::file::read<double>::from(p);
+    return tools::sys_fs::read<double>::from(p);
 }
 
 double
@@ -48,6 +48,6 @@ cpufreq_stats::cpu::cur_freq(std::uint32_t cpu)
     if (!online(cpu))
         return 0.0;
     std::string p=path(cpu)+"cpufreq/scaling_cur_freq";
-    return tools::file::read<double>::from(p);
+    return tools::sys_fs::read<double>::from(p);
 }
 

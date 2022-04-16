@@ -52,18 +52,12 @@ namespace tools {
 
     class iarraybuf : public std::streambuf {
     public:
-        iarraybuf(const char* base, size_t size) {
-            char* p=const_cast<char*>(base);
-            this->setg(p, p, p + size);
-        }
+        iarraybuf(const char* base, size_t size);
     };
 
     class iarraystream : private iarraybuf, public std::istream {
     public:
-        iarraystream(const char* base, size_t size)
-            : iarraybuf(base, size),
-              std::istream(static_cast<std::streambuf*>(this)) {
-        }
+        iarraystream(const char* base, size_t size);
     };
 
     // named shared memory
@@ -85,7 +79,11 @@ namespace tools {
     };
 
     namespace file {
+        bool
+        exists(const std::string& fn);
+    }
 
+    namespace sys_fs {
         // helper struct to read<_T>::from files
         template <typename _T>
         struct read {
@@ -94,17 +92,12 @@ namespace tools {
             from(const std::string& fn);
         };
 
-#if 0
         template <>
         struct read<std::string> {
             static
             std::string
             from(const std::string& fn);
         };
-#endif
-
-        bool
-        exists(const std::string& fn);
     }
 }
 
@@ -180,9 +173,9 @@ tools::file_handle::operator()() const
 
 template <typename _T>
 _T
-tools::file::read<_T>::from(const std::string& fn)
+tools::sys_fs::read<_T>::from(const std::string& fn)
 {
-#if 0
+#if 1
     std::string fc=read<std::string>::from(fn);
     iarraystream s(fc.data(), fc.size());
 #else
