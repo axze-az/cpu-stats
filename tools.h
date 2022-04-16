@@ -94,6 +94,15 @@ namespace tools {
             from(const std::string& fn);
         };
 
+#if 0
+        template <>
+        struct read<std::string> {
+            static
+            std::string
+            from(const std::string& fn);
+        };
+#endif
+
         bool
         exists(const std::string& fn);
     }
@@ -173,7 +182,12 @@ template <typename _T>
 _T
 tools::file::read<_T>::from(const std::string& fn)
 {
+#if 0
+    std::string fc=read<std::string>::from(fn);
+    iarraystream s(fc.data(), fc.size());
+#else
     std::ifstream s(fn.c_str());
+#endif
     _T r(0);
     s >> r;
     return r;

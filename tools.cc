@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <fstream>
+#include <iostream>
 
 void*
 tools::shm::
@@ -70,6 +71,29 @@ unlink(const std::string& fname)
 {
     shm_unlink(fname.c_str());
 }
+
+#if 0
+std::string
+tools::file::read<std::string>::from(const std::string& fn)
+{
+    std::string r;
+    file_handle fd=open(fn.c_str(), O_RDONLY);
+    if (fd() <0) {
+        return r;
+    }
+    struct stat st;
+    if (fstat(fd(), &st)<0) {
+        return r;
+    }
+    std::string::size_type fs=st.st_size;
+    r.resize(fs, 0);
+    ssize_t rs=0;
+    if ((rs=::read(fd(), r.data(), ssize_t(fs))) != ssize_t(fs)) {
+        r.resize(std::max(rs, ssize_t(0)));
+    }
+    return r;
+}
+#endif
 
 bool
 tools::file::exists(const std::string& fn)
