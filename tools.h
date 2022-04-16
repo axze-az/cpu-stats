@@ -50,6 +50,22 @@ namespace tools {
         const int& operator()() const;
     };
 
+    class iarraybuf : public std::streambuf {
+    public:
+        iarraybuf(const char* base, size_t size) {
+            char* p=const_cast<char*>(base);
+            this->setg(p, p, p + size);
+        }
+    };
+
+    class iarraystream : private iarraybuf, public std::istream {
+    public:
+        iarraystream(const char* base, size_t size)
+            : iarraybuf(base, size),
+              std::istream(static_cast<std::streambuf*>(this)) {
+        }
+    };
+
     // named shared memory
     namespace shm {
         // create a new shared memory posix file fname with size s and
