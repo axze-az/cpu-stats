@@ -58,6 +58,7 @@ namespace tools {
     class iarraystream : private iarraybuf, public std::istream {
     public:
         iarraystream(const char* base, size_t size);
+        iarraystream(const std::string_view& s);
     };
 
     // named shared memory
@@ -177,7 +178,7 @@ tools::sys_fs::read<_T>::from(const std::string& fn)
 {
 #if 1
     std::string fc=read<std::string>::from(fn);
-    iarraystream s(fc.data(), fc.size());
+    iarraystream s(fc);
 #else
     std::ifstream s(fn.c_str());
 #endif

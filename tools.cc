@@ -20,6 +20,12 @@ iarraystream(const char* base, size_t size)
 {
 }
 
+tools::iarraystream::
+iarraystream(const std::string_view& s)
+    : iarraybuf(s.data(), s.length()),
+      std::istream(static_cast<std::streambuf*>(this))
+{
+}
 
 void*
 tools::shm::
