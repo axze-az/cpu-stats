@@ -111,11 +111,15 @@ tools::sys_fs::read<std::string>::from(const std::string& fn)
     if (fd() <0) {
         return r;
     }
+#if 0
     struct stat st;
     if (fstat(fd(), &st)<0) {
         return r;
     }
     std::string::size_type fs=st.st_size;
+#else
+    std::string::size_type fs=4096;
+#endif
     r.resize(fs, 0);
     ssize_t rs=0;
     if ((rs=::read(fd(), r.data(), ssize_t(fs))) != ssize_t(fs)) {
