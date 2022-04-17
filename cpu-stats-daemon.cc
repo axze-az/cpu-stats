@@ -144,20 +144,18 @@ int daemon_main(bool foreground, std::uint32_t timeout)
             }
         }
         {
-            std::ostringstream os;
-            p_dta.to_stream(os, false);
-            std::istringstream is(os.str());
+            std::stringstream s;
+            p_dta.to_stream(s, false);
             std::string l;
-            while (std::getline(is, l).good()) {
+            while (std::getline(s, l).good()) {
                 syslog(LOG_INFO, "%s", l.c_str());
             }
         }
         {
-            std::ostringstream os;
-            f_dta.to_stream(os, false);
-            std::istringstream is(os.str());
+            std::stringstream s;
+            f_dta.to_stream(s, false);
             std::string l;
-            while (std::getline(is, l).good()) {
+            while (std::getline(s, l).good()) {
                 syslog(LOG_INFO, "%s", l.c_str());
             }
         }
