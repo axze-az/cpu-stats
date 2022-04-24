@@ -114,8 +114,8 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
     s << '\n';
     s << std::fixed << std::setprecision(0);
     s << "cpu " << cpu
-      << ", min_f=" << min_f/1000
-      << ", max_f=" << max_f/1000
+      << ", f_min=" << min_f/1000
+      << ", f_max=" << max_f/1000
       << ", samples=" << std::scientific << std::setprecision(22) << sum_ti
       << std::fixed << '\n';
     if (!short_output) {
