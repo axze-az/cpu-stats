@@ -1,45 +1,51 @@
+cpu-stats (0.3.0) unstable; urgency=medium
+
+  * addition of energy used since start of daemon
+
+ -- axel <axel.zeuner@gmx.de>  Apr, 30 Apr 2022 11:40:00 +0100
+
 cpu-stats (0.2.6) unstable; urgency=medium
 
   * cpu-stats-daemon detects timer overruns and performs weighted updates
   * on cpu frequency and power statistics
 
- -- axel <axel.zeuner@gmx.de>  Sun, 10 Apr 2022 07:45:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Sun, 10 Apr 2022 07:45:00 +0100
 
 cpu-stats (0.2.5) unstable; urgency=medium
 
   * allow short output from cpu-stats using -s option
 
- -- axel <axel.zeuner@gmx.de>  Sun, 10 Apr 2022 07:45:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Sun, 10 Apr 2022 07:45:00 +0100
 
 cpu-stats (0.2.4) unstable; urgency=medium
 
   * replace cpufreq with cpu in the systemd unit file
 
- -- axel <axel.zeuner@gmx.de>  Mon, 05 Apr 2022 08:45:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Mon, 05 Apr 2022 08:45:00 +0100
 
 cpu-stats (0.2.3) unstable; urgency=medium
 
   * fix counter overflows during power readings
 
- -- axel <axel.zeuner@gmx.de>  Mon, 05 Apr 2022 05:45:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Mon, 05 Apr 2022 05:45:00 +0100
 
 cpu-stats (0.2.2) unstable; urgency=medium
 
   * addition of debug code to detect spurious power readings
 
- -- axel <axel.zeuner@gmx.de>  Mon, 04 Apr 2022 05:15:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Mon, 04 Apr 2022 05:15:00 +0100
 
 cpu-stats (0.2.1) unstable; urgency=medium
 
   * addition of average power and frequency outputs
 
- -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 17:15:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 17:15:00 +0100
 
 cpu-stats (0.2.0) unstable; urgency=medium
 
   * addition of a power statistics output
 
- -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 09:10:00 +0200
+ -- axel <axel.zeuner@gmx.de>  Sat, 02 Apr 2022 09:10:00 +0100
 
 cpu-stats (0.1.3) unstable; urgency=medium
 
