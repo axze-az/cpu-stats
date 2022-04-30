@@ -78,10 +78,18 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
                    "e_1: %lu e_0: %lu",
                    e_now, e_last, tmo_sec, e_1, e_0);
         }
+        std::uint64_t delta_uj=e_1 - e_0;
+        std::uint64_t cur_uj=p->uj_lo();
+        std::uint64_t uj=cur_uj + delta_uj;
+        p->uj_lo(uj);
+        if (uj < cur_uj || uj < delta_uj) {
+            std::uint64_t ujh=p->uj_hi();
+            p->uj_hi(ujh+1);
+        }
         // conversion factor between ujoule and joule and
         // division by time to obtain power in watt
         double factor= 1.0e-6/double(tmo_sec);
-        double p_in_w = (e_1 - e_0)*factor;
+        double p_in_w = delta_uj*factor;
         // std::cout << " p in w: " << p_in_w;
         size_t idx=shm_seg::power_to_idx(p_in_w);
         if ((idx>=shm_seg::POWER_ENTRIES-1) ||
@@ -107,6 +115,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 {
     std::uint32_t vt[shm_seg::POWER_ENTRIES];
     std::uint32_t pkg= p->pkg();
+    std::uint64_t ujl= p->uj_lo(), ujh=p->uj_hi();
     std::copy(p->begin(), p->end(), std::begin(vt));
 
     // determine entries != 0
@@ -183,7 +192,16 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
         s << '\n';
     }
     avg = avg*1.0e-2 - (shm_seg::power_step*.5);
-    s << "average power: ~" << avg << " W\n";
+    double ws=(double(ujl) + double(ujh)*0x1p64)*1e-6;
+    double kwh=ws/(1000*3600);
+    ws = rint(ws);
+    kwh= rint(kwh*1e3)*1e-3;
+    s << "average power: ~" << avg << " W\n"
+      << "used energy:   ~"
+      << std::scientific << std::setprecision(15) << ws << " Ws, ~"
+      << std::setprecision(15) << kwh << " kWh"
+      << '\n';
+
     if (std::fabs(sum-100) > 0.005) {
         s << "invalid sum " << sum << std::endl;
     }

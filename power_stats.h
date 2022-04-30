@@ -46,7 +46,10 @@ namespace power_stats {
         };
     private:
         // package number
-        uint32_t _pkg;
+        std::uint32_t _pkg;
+        // micro joules since start
+        std::uint64_t _uj_lo;
+        std::uint64_t _uj_hi;
         // array with ticks/power_range
         std::uint32_t _entries[POWER_ENTRIES];
     public:
@@ -75,6 +78,10 @@ namespace power_stats {
         idx_to_power(std::size_t p);
 
         const std::uint32_t& pkg() const;
+        const std::uint64_t& uj_lo() const;
+        shm_seg& uj_lo(const std::uint64_t& uj);
+        const std::uint64_t& uj_hi() const;
+        shm_seg& uj_hi(const std::uint64_t& uj);
         std::uint32_t* begin();
         std::uint32_t* end();
         const std::uint32_t* begin() const;
@@ -114,6 +121,38 @@ power_stats::shm_seg::pkg()
     const
 {
     return _pkg;
+}
+
+inline
+const std::uint64_t&
+power_stats::shm_seg::uj_lo()
+    const
+{
+    return _uj_lo;
+}
+
+inline
+power_stats::shm_seg&
+power_stats::shm_seg::uj_lo(const std::uint64_t& v)
+{
+    _uj_lo = v;
+    return *this;
+}
+
+inline
+const std::uint64_t&
+power_stats::shm_seg::uj_hi()
+    const
+{
+    return _uj_hi;
+}
+
+inline
+power_stats::shm_seg&
+power_stats::shm_seg::uj_hi(const std::uint64_t& v)
+{
+    _uj_hi = v;
+    return *this;
 }
 
 inline

@@ -18,6 +18,7 @@ power_stats::shm_seg::name(std::uint32_t pkg)
 
 power_stats::shm_seg::shm_seg(std::uint32_t pkg)
     : _pkg(pkg),
+      _uj_lo(0), _uj_hi(0),
       _entries{0}
 {
 }
