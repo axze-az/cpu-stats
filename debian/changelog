@@ -2,7 +2,7 @@ cpu-stats (0.3.0) unstable; urgency=medium
 
   * addition of energy used since start of daemon
 
- -- axel <axel.zeuner@gmx.de>  Apr, 30 Apr 2022 11:40:00 +0100
+ -- axel <axel.zeuner@gmx.de>  Sat, 30 Apr 2022 11:40:00 +0100
 
 cpu-stats (0.2.6) unstable; urgency=medium
 
