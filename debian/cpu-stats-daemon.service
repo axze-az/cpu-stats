@@ -2,6 +2,8 @@
 Description=cpu statistics daemon
 
 [Service]
+ExecStartPre=-/usr/sbin/modprobe -b intel_rapl_common
+ExecStartPre=-/usr/sbin/modprobe -b intel_rapl_msr
 ExecStart=/usr/sbin/cpu-stats-daemon -f
 IgnoreSIGPIPE=false
 KillMode=process
