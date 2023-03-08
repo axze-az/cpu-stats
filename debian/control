@@ -1,5 +1,5 @@
 Source: cpu-stats
-Section: unknown
+Section: admin
 Priority: optional
 Maintainer: axel <axel.zeuner@gmx.de>
 Build-Depends: debhelper-compat (= 13)
