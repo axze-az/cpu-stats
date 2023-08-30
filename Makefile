@@ -10,7 +10,7 @@ all: cpu-stats-daemon cpu-stats
 
 STRIP=-s
 CXX=g++
-CXXFLAGS=-pipe -std=gnu++20 -O2 -fomit-frame-pointer -Wall -I.
+CXXFLAGS=-pipe -O2 -fomit-frame-pointer -Wall -I.
 #CXXFLAGS+= -ffunction-sections -fdata-sections
 LD=$(CXX)
 LIBS=-L. -lcpustats -lrt -lpthread
