@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2024  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 #include <sstream>
 #include <iostream>
 
+constexpr const std::uint32_t default_timeout_seconds=3;
 #define RUN_DIR "/run"
 
 tools::file_handle write_pidfile()
@@ -115,7 +116,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         timer_create(CLOCK_REALTIME, &sev, &timerid);
         struct itimerspec iv;
         std::memset(&iv, 0, sizeof(iv));
-        // every 2 seconds
+        // every timeout seconds
         iv.it_interval.tv_sec=timeout;
         // and the next one in timeout second
         iv.it_value.tv_nsec=0;
@@ -128,7 +129,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         sigfillset(&s);
         siginfo_t si;
         syslog(LOG_INFO,
-               "version 0.3 startup complete using a timeout of %d seconds.",
+               "version 0.4 startup complete using a timeout of %u seconds.",
                timeout);
         bool done=false;
         while (!done) {
@@ -190,15 +191,16 @@ usage(const char* argv)
 {
     std::cerr << argv << " [-f] [-t X] [-h]\n"
               << "-f    stay in foreground\n"
-              << "-t X  sample every X seconds, 0<X<=60, default 2\n"
-              << "-h    print this information and exit\n";
+              << "-t X  sample every X seconds, 0<X<=60, default "
+	      << default_timeout_seconds<< "\n"
+	      << "-h    print this information and exit\n";
     std::exit(3);
 }
 
 int main(int argc, char** argv)
 {
     char c;
-    std::int32_t timeout=2;
+    std::int32_t timeout=default_timeout_seconds;
     bool foreground=false;
     while ((c=getopt(argc, argv, "hft:")) != -1) {
         switch (c) {

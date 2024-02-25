@@ -1,3 +1,9 @@
+cpu-stats (0.4.0) unstable; urgency=medium
+
+  * change the default timeout to 3 seconds
+
+ -- axel <axel.zeuner@gmx.de>  Sun, 25 Feb 2024 16:30:00 +0200
+
 cpu-stats (0.3.1) unstable; urgency=medium
 
   * load the required modules before starting the daemon

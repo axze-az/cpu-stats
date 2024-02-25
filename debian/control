@@ -12,5 +12,5 @@ Rules-Requires-Root: no
 Package: cpu-stats
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: cpufreq statistics daemon and client
+Description: cpu statistics daemon and client
 
