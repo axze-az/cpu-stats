@@ -22,7 +22,7 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	dh_installsystemd --name cpu-stats-daemon
+	dh_installsystemd --name=cpu-stats-daemon
 	$(MAKE) DESTDIR=$(CURDIR)/debian/cpu-stats PREFIX="" install
 
 # dh_make generated override targets

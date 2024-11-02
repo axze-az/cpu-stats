@@ -200,7 +200,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
             double spcti=vspct[k];
             if (i)
                 s << "  | ";
-            s << std::setw(5) << std::setprecision(0) << pi << ' '
+            s << std::setw(5) << std::setprecision(1) << pi << ' '
               << std::setw(7) << std::setprecision(2) << pcti << ' '
               << std::setw(7) << std::setprecision(2) << spcti;
             sum += pcti;
