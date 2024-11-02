@@ -1,3 +1,9 @@
+cpu-stats (0.5.0) unstable; urgency=medium
+
+  * change the power histogram slots to 2.5W
+
+ -- axel <axel.zeuner@gmx.de>  Sat, 02 Nov 2024 11:00:00 +0100
+
 cpu-stats (0.4.0) unstable; urgency=medium
 
   * change the default timeout to 3 seconds

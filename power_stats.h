@@ -50,9 +50,9 @@ namespace power_stats {
         static
         std::string name(std::uint32_t pkg);
     public:
-        // powerstep of 5 W's
+        // powerstep of 2.5 W's
         static
-        constexpr const double power_step=5;
+        constexpr const double power_step=2.5;
         static
         constexpr const double inv_power_step=1.0/power_step;
         // until we figure out
