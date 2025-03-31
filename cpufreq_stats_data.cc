@@ -72,6 +72,7 @@ cpufreq_stats::data::update(std::uint32_t weight)
         size_t idx=shm_seg::freq_to_idx(cur_f);
         std::uint32_t* pi=p->begin() + idx;
         (*pi)+=weight;
+        p->last_f_khz(cur_f);
     }
 }
 
@@ -79,12 +80,11 @@ void
 cpufreq_stats::data::
 to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 {
-    std::uint32_t cpu;
-    double min_f, max_f;
     std::uint32_t vt[shm_seg::FREQ_ENTRIES];
-    cpu= p->cpu();
-    min_f=p->min_f_khz();
-    max_f=p->max_f_khz();
+    std::uint32_t cpu= p->cpu();
+    double min_f=p->min_f_khz();
+    double max_f=p->max_f_khz();
+    double last_f=p->last_f_khz();
     std::copy(p->begin(), p->end(), std::begin(vt));
 
     // determine entries != 0
@@ -131,8 +131,8 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
     s << '\n';
     s << std::fixed << std::setprecision(0);
     s << "cpu " << cpu
-      << ", f_min=" << min_f/1000
-      << ", f_max=" << max_f/1000
+      << ", f_min=" << min_f*1e-3
+      << ", f_max=" << max_f*1e-3
       << ", samples=" << std::scientific << std::setprecision(22) << sum_ti
       << std::fixed << '\n';
     if (!short_output) {
@@ -169,7 +169,8 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
             s << '\n';
     }
     avg *= 1e-2;
-    s << "average frequency: ~" << std::setprecision(0) << avg << " MHz\n";
+    s << "average frequency: ~" << std::setprecision(0) << avg << " MHz, "
+      << "last measured frequency: ~" << last_f*1e-3 << " MHz\n";
     if (std::fabs(sum-100) > 0.005) {
         s << "invalid sum " << sum << std::endl;
     }

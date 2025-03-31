@@ -68,6 +68,8 @@ namespace cpufreq_stats {
         double _min_f_khz;
         // max frequency
         double _max_f_khz;
+        // last measured frequency
+        double _last_f_khz;
         // array with ticks/freq range, _entries[0] 0*freq_step,
         // _entries[1] 1*freq_step, ..
         // (2^32)-1)/(3600*24*365.25) ~ 136.09 years are possible
@@ -105,6 +107,8 @@ namespace cpufreq_stats {
         const std::uint32_t& cpu() const;
         const double& min_f_khz() const;
         const double& max_f_khz() const;
+        shm_seg& last_f_khz(const double& f);
+        const double& last_f_khz() const;
         std::uint32_t* begin();
         std::uint32_t* end();
         const std::uint32_t* begin() const;
@@ -134,7 +138,6 @@ namespace cpufreq_stats {
 
 }
 
-
 inline
 const std::uint32_t&
 cpufreq_stats::shm_seg::cpu()
@@ -151,7 +154,6 @@ cpufreq_stats::shm_seg::min_f_khz()
     return _min_f_khz;
 }
 
-
 inline
 const double&
 cpufreq_stats::shm_seg::max_f_khz()
@@ -160,6 +162,21 @@ cpufreq_stats::shm_seg::max_f_khz()
     return _max_f_khz;
 }
 
+inline
+cpufreq_stats::shm_seg&
+cpufreq_stats::shm_seg::last_f_khz(const double& v)
+{
+    _last_f_khz = v;
+    return *this;
+}
+
+inline
+const double&
+cpufreq_stats::shm_seg::last_f_khz()
+    const
+{
+    return _last_f_khz;
+}
 
 inline
 std::uint32_t*
