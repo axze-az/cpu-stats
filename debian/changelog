@@ -1,3 +1,10 @@
+cpu-stats (0.6.0) unstable; urgency=medium
+
+  * add power over last interval and last measured frequency to the
+  * ouputs
+
+ -- axel <axel.zeuner@gmx.de>  Mon, 31 Mar 2025 15:37:00 +0200
+
 cpu-stats (0.5.0) unstable; urgency=medium
 
   * change the power histogram slots to 2.5W
