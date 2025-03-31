@@ -67,6 +67,8 @@ namespace power_stats {
         // micro joules since start
         std::uint64_t _uj_lo;
         std::uint64_t _uj_hi;
+        // mean power over the last interval
+        double _power;
         // array with ticks/power_range
         std::uint32_t _entries[POWER_ENTRIES];
     public:
@@ -99,6 +101,8 @@ namespace power_stats {
         shm_seg& uj_lo(const std::uint64_t& uj);
         const std::uint64_t& uj_hi() const;
         shm_seg& uj_hi(const std::uint64_t& uj);
+        shm_seg& power(const double& pwr);
+        const double& power() const;
         std::uint32_t* begin();
         std::uint32_t* end();
         const std::uint32_t* begin() const;
@@ -170,6 +174,22 @@ power_stats::shm_seg::uj_hi(const std::uint64_t& v)
 {
     _uj_hi = v;
     return *this;
+}
+
+inline
+power_stats::shm_seg&
+power_stats::shm_seg::power(const double& v)
+{
+    _power=v;
+    return *this;
+}
+
+inline
+const double&
+power_stats::shm_seg::power()
+    const
+{
+    return _power;
 }
 
 inline

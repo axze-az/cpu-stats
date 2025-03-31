@@ -123,6 +123,7 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
         // std::cout << " idx: " << idx << std::endl;
         std::uint32_t* pi=p->begin() + idx;
         (*pi)+=weight;
+        p->power(p_in_w);
     }
 }
 
@@ -142,6 +143,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
     std::size_t idx_max=0;
     std::uint32_t max_ti=0;
     double sum_ti=0.0;
+    double p_in_w=p->power();
     for (std::size_t i=0; i<shm_seg::POWER_ENTRIES; ++i) {
         std::uint32_t ti=vt[i];
         if (vt[i]==0)
@@ -213,7 +215,8 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
     double kwh=ws/(1000*3600);
     ws = rint(ws);
     kwh= rint(kwh*1e3)*1e-3;
-    s << "average power: ~" << avg << " W\n"
+    s << "average power: ~" << avg << " W, power over last interval: "
+      << p_in_w << " W\n"
       << "used energy:   ~"
       << std::scientific << std::setprecision(15) << ws << " Ws, ~"
       << std::setprecision(15) << kwh << " kWh"
