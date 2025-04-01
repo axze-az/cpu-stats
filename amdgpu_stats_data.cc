@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -28,17 +28,17 @@ amdgpu_stats::data::data(bool create)
       _create(create)
 {
     try {
-	for (size_t i=0; hwmon::exists(i); ++i) {
-	    if (!hwmon::is_amdgpu(i))
-		continue;
-	    const shm_seg* p=nullptr;
-	    if (_create) {
-		p=shm_seg::create(i);
-	    } else {
-		p=shm_seg::open(i);
-	    }
-	    _v.push_back(p);
-	}
+        for (size_t i=0; hwmon::exists(i); ++i) {
+            if (!hwmon::is_amdgpu(i))
+                continue;
+            const shm_seg* p=nullptr;
+            if (_create) {
+                p=shm_seg::create(i);
+            } else {
+                p=shm_seg::open(i);
+            }
+            _v.push_back(p);
+        }
     }
     catch (const std::runtime_error& e) {
         if (_create) {
@@ -76,18 +76,20 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
         std::uint64_t p_in_uw=hwmon::ppt(p->id());
         double p_in_w = double(p_in_uw)*1e-6;
         // std::cout << " p in w: " << p_in_w << '\n';
-	size_t idx=shm_seg::power_to_idx(p_in_w);
+        size_t idx=shm_seg::power_to_idx(p_in_w);
         if ((idx>=shm_seg::POWER_ENTRIES-1) ||
             (p_in_w > shm_seg::max_power)) {
             syslog(LOG_INFO,
                    "amdgpu_stats: reading from amdgpu: "
                    "%f",
-		   p_in_w);
+                   p_in_w);
         }
         // std::cout << " idx: " << idx << std::endl;
+        std::uint64_t s=p->elapsed_s() + tmo_sec;
         std::uint32_t* pi=p->begin() + idx;
         (*pi)+=weight;
         p->power(p_in_w);
+        p->elapsed_s(s);
     }
 }
 
@@ -107,6 +109,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
     std::uint32_t max_ti=0;
     double sum_ti=0.0;
     double p_in_w=p->power();
+    std::uint64_t elapsed_s=p->elapsed_s();
     for (std::size_t i=0; i<shm_seg::POWER_ENTRIES; ++i) {
         std::uint32_t ti=vt[i];
         if (vt[i]==0)
@@ -174,17 +177,16 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
         s << '\n';
     }
     avg = avg*1.0e-2 - (shm_seg::power_step*.5);
-    // double ws=(double(ujl) + double(ujh)*0x1p64)*1e-6;
-    // double kwh=ws/(1000*3600);
-    // ws = rint(ws);
-    // kwh= rint(kwh*1e3)*1e-3;
+    double ws=double(elapsed_s)*avg;
+    double kwh=ws/(1000*3600);
+    ws = rint(ws);
+    kwh= rint(kwh*1e3)*1e-3;
     s << "average power: ~" << avg << " W, power over last interval: "
       << p_in_w << " W\n"
-	// << "used energy:   ~"
-	// << std::scientific << std::setprecision(15) << ws << " Ws, ~"
-	// << std::setprecision(15) << kwh << " kWh"
+      << "used energy:   ~"
+      << std::scientific << std::setprecision(15) << ws << " Ws, ~"
+      << std::setprecision(15) << kwh << " kWh"
       << '\n';
-
     if (std::fabs(sum-100) > 0.005) {
         s << "invalid sum " << sum << std::endl;
     }

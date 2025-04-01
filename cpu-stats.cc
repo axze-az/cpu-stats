@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 //
 #include "cpufreq_stats.h"
 #include "rapl_stats.h"
+#include "amdgpu_stats.h"
 #include <iostream>
 #include <string_view>
 
@@ -35,6 +36,14 @@ int main(int argc, char** argv)
     }
     try {
         rapl_stats::data dta(false);
+        dta.to_stream(std::cout, short_output);
+    }
+    catch (const std::runtime_error& e) {
+        std::cerr << e.what() << '\n';
+        std::cerr << "Is the daemon running?\n";
+    }
+    try {
+        amdgpu_stats::data dta(false);
         dta.to_stream(std::cout, short_output);
     }
     catch (const std::runtime_error& e) {

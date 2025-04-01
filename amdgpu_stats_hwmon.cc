@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 //
 #include "amdgpu_stats.h"
 #include <sstream>
+#include <iostream>
 
 std::string
 amdgpu_stats::hwmon::path(std::uint32_t no)
@@ -38,7 +39,7 @@ amdgpu_stats::hwmon::is_amdgpu(std::uint32_t no)
 {
     std::string p=path(no) + "name";
     std::string n=tools::sys_fs::read<std::string>::from(p);
-    return n=="amdgpu";
+    return n=="amdgpu\n";
 }
 
 std::uint64_t

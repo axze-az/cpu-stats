@@ -17,6 +17,7 @@
 //
 #include "cpufreq_stats.h"
 #include "rapl_stats.h"
+#include "amdgpu_stats.h"
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
@@ -123,13 +124,14 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         iv.it_value.tv_sec=timeout;
         timer_settime(timerid, 0, &iv, 0);
         rapl_stats::data r_dta(true);
+        amdgpu_stats::data g_dta(true);
         cpufreq_stats::data f_dta(true);
 
         sigset_t s;
         sigfillset(&s);
         siginfo_t si;
         syslog(LOG_INFO,
-               "version 0.6 startup complete using a timeout of %u seconds.",
+               "version 0.6.5 startup complete using a timeout of %u seconds.",
                timeout);
         bool done=false;
         while (!done) {
@@ -140,6 +142,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
                     std::uint32_t weight=tmr_or+1;
                     f_dta.update(weight);
                     r_dta.update(weight*timeout, weight);
+                    g_dta.update(weight*timeout, weight);
                     if (weight > 1) {
                         syslog(LOG_WARNING,
                                "timer_getoverrun() returned %d", tmr_or);
@@ -171,6 +174,14 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         }
         {
             std::stringstream s;
+            g_dta.to_stream(s, false);
+            std::string l;
+            while (std::getline(s, l).good()) {
+                syslog(LOG_INFO, "%s", l.c_str());
+            }
+        }
+        {
+            std::stringstream s;
             f_dta.to_stream(s, false);
             std::string l;
             while (std::getline(s, l).good()) {
@@ -192,8 +203,8 @@ usage(const char* argv)
     std::cerr << argv << " [-f] [-t X] [-h]\n"
               << "-f    stay in foreground\n"
               << "-t X  sample every X seconds, 0<X<=60, default "
-	      << default_timeout_seconds<< "\n"
-	      << "-h    print this information and exit\n";
+              << default_timeout_seconds<< "\n"
+              << "-h    print this information and exit\n";
     std::exit(3);
 }
 

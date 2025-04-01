@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ amdgpu_stats::shm_seg::name(std::uint32_t hwmon)
 
 amdgpu_stats::shm_seg::shm_seg(std::uint32_t id)
     : _id(id),
+      _power(0.0),
+      _elapsed_s(0),
       _entries{0}
 {
 }

@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -63,6 +63,8 @@ namespace amdgpu_stats {
         std::uint32_t _id;
         // power read last time
         double _power;
+        // (bad) estimation of time elapsed
+        std::uint64_t _elapsed_s;
         // array with ticks/power_range
         std::uint32_t _entries[POWER_ENTRIES];
     public:
@@ -93,6 +95,8 @@ namespace amdgpu_stats {
         const std::uint32_t& id() const;
         shm_seg& power(const double& pwr);
         const double& power() const;
+        shm_seg& elapsed_s(const std::uint64_t& v);
+        const std::uint64_t& elapsed_s() const;
         std::uint32_t* begin();
         std::uint32_t* end();
         const std::uint32_t* begin() const;
@@ -143,6 +147,22 @@ amdgpu_stats::shm_seg::power()
     const
 {
     return _power;
+}
+
+inline
+amdgpu_stats::shm_seg&
+amdgpu_stats::shm_seg::elapsed_s(const std::uint64_t& v)
+{
+    _elapsed_s=v;
+    return *this;
+}
+
+inline
+const std::uint64_t&
+amdgpu_stats::shm_seg::elapsed_s()
+    const
+{
+    return _elapsed_s;
 }
 
 inline

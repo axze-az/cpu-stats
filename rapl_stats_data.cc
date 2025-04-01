@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2020-2022  Axel Zeuner
+//  Copyright (C) 2020-2025  Axel Zeuner
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -180,7 +180,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
         s << "========================";
     s << '\n';
     s << std::fixed << std::setprecision(0);
-    s << "package " << pkg
+    s << "rapl package " << pkg
       << ", samples=" << std::scientific << std::setprecision(22) << sum_ti
       << std::fixed << '\n';
     for (std::uint32_t i=0; i<cols; ++i) {
