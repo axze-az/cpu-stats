@@ -45,8 +45,8 @@ install: all
 	mkdir -p ${IROOT}/${SBIN_DIR}
 	install -m 0755 -g root -o root cpu-stats-daemon ${IROOT}/${SBIN_DIR}
 
-cpu-stats-daemon.o: cpu-stats-daemon.cc cpufreq_stats.h tools.h
-cpu-stats.o: cpu-stats.cc cpufreq_stats.h tools.h
+cpu-stats-daemon.o: cpu-stats-daemon.cc cpufreq_stats.h rapl_stats.h tools.h
+cpu-stats.o: cpu-stats.cc cpufreq_stats.h rapl_stats.h tools.h
 cpufreq_stats_cpu.o: cpufreq_stats_cpu.cc cpufreq_stats.h tools.h
 cpufreq_stats_shm_seg.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
 cpufreq_stats_data.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
