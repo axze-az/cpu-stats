@@ -15,7 +15,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
-#include "power_stats.h"
+#include "rapl_stats.h"
 #include <iostream>
 #include <iomanip>
 #include <cmath>
@@ -23,7 +23,7 @@
 #include <numeric>
 #include <syslog.h>
 
-power_stats::data::data(bool create)
+rapl_stats::data::data(bool create)
     : _v(),
       _vp(),
       _create(create)
@@ -36,7 +36,7 @@ power_stats::data::data(bool create)
                 std::uint64_t e=pkg::energy_uj(i);
                 std::uint64_t me=pkg::max_energy_range_uj(i);
                 syslog(LOG_INFO,
-                       "power_stats: max_energy_range_uj: %lu ", me);
+                       "rapl_stats: max_energy_range_uj: %lu ", me);
                 priv_data pd{e, me};
                 _vp.push_back(pd);
             }
@@ -58,7 +58,7 @@ power_stats::data::data(bool create)
     }
 }
 
-power_stats::data::~data()
+rapl_stats::data::~data()
 {
     if (_create==true) {
         for (std::size_t i=0; i<_v.size(); ++i) {
@@ -73,7 +73,7 @@ power_stats::data::~data()
 }
 
 void
-power_stats::data::
+rapl_stats::data::
 update(std::uint32_t tmo_sec, std::uint32_t weight)
 {
     if (_create == false)
@@ -90,7 +90,7 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
             e_1 = (_vp[i]._max_energy_range_uj - e_last) + e_now;
             e_0 = 0;
             syslog(LOG_INFO,
-                   "power_stats: correction of counter overflow "
+                   "rapl_stats: correction of counter overflow "
                    "now: %lu last: %lu with timeout %u "
                    "e_1: %lu e_0: %lu",
                    e_now, e_last, tmo_sec, e_1, e_0);
@@ -112,11 +112,11 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
         if ((idx>=shm_seg::POWER_ENTRIES-1) ||
             (p_in_w > shm_seg::max_power)) {
             syslog(LOG_INFO,
-                   "power_stats: reading from rapl: "
+                   "rapl_stats: reading from rapl: "
                    "now: %lu last: %lu with timeout %u and p: %f",
                    e_now, e_last, tmo_sec, p_in_w);
             syslog(LOG_INFO,
-                   "power_stats: reading from rapl: "
+                   "rapl_stats: reading from rapl: "
                    "e_0: %lu e_1: %lu max: %lu",
                    e_0, e_1, _vp[i]._max_energy_range_uj);
         }
@@ -128,7 +128,7 @@ update(std::uint32_t tmo_sec, std::uint32_t weight)
 }
 
 void
-power_stats::data::
+rapl_stats::data::
 to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 {
     std::uint32_t vt[shm_seg::POWER_ENTRIES];
@@ -228,7 +228,7 @@ to_stream(std::ostream& s, const shm_seg* p, bool short_output)
 }
 
 void
-power_stats::data::to_stream(std::ostream& s, bool short_output)
+rapl_stats::data::to_stream(std::ostream& s, bool short_output)
 {
     for (std::size_t i=0; i<_v.size(); ++i) {
         to_stream(s, _v[i], short_output);

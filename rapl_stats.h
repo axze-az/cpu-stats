@@ -15,13 +15,13 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
-#if !defined (__POWER_STATS_H__)
-#define __POWER_STATS_H__ 1
+#if !defined (__RAPL_STATS_H__)
+#define __RAPL_STATS_H__ 1
 
 #include <tools.h>
 #include <vector>
 
-namespace power_stats {
+namespace rapl_stats {
 
     struct pkg {
         static
@@ -138,7 +138,7 @@ namespace power_stats {
 
 inline
 const std::uint32_t&
-power_stats::shm_seg::pkg()
+rapl_stats::shm_seg::pkg()
     const
 {
     return _pkg;
@@ -146,15 +146,15 @@ power_stats::shm_seg::pkg()
 
 inline
 const std::uint64_t&
-power_stats::shm_seg::uj_lo()
+rapl_stats::shm_seg::uj_lo()
     const
 {
     return _uj_lo;
 }
 
 inline
-power_stats::shm_seg&
-power_stats::shm_seg::uj_lo(const std::uint64_t& v)
+rapl_stats::shm_seg&
+rapl_stats::shm_seg::uj_lo(const std::uint64_t& v)
 {
     _uj_lo = v;
     return *this;
@@ -162,23 +162,23 @@ power_stats::shm_seg::uj_lo(const std::uint64_t& v)
 
 inline
 const std::uint64_t&
-power_stats::shm_seg::uj_hi()
+rapl_stats::shm_seg::uj_hi()
     const
 {
     return _uj_hi;
 }
 
 inline
-power_stats::shm_seg&
-power_stats::shm_seg::uj_hi(const std::uint64_t& v)
+rapl_stats::shm_seg&
+rapl_stats::shm_seg::uj_hi(const std::uint64_t& v)
 {
     _uj_hi = v;
     return *this;
 }
 
 inline
-power_stats::shm_seg&
-power_stats::shm_seg::power(const double& v)
+rapl_stats::shm_seg&
+rapl_stats::shm_seg::power(const double& v)
 {
     _power=v;
     return *this;
@@ -186,7 +186,7 @@ power_stats::shm_seg::power(const double& v)
 
 inline
 const double&
-power_stats::shm_seg::power()
+rapl_stats::shm_seg::power()
     const
 {
     return _power;
@@ -194,21 +194,21 @@ power_stats::shm_seg::power()
 
 inline
 std::uint32_t*
-power_stats::shm_seg::begin()
+rapl_stats::shm_seg::begin()
 {
     return _entries;
 }
 
 inline
 std::uint32_t*
-power_stats::shm_seg::end()
+rapl_stats::shm_seg::end()
 {
     return _entries+POWER_ENTRIES;
 }
 
 inline
 const std::uint32_t*
-power_stats::shm_seg::begin()
+rapl_stats::shm_seg::begin()
     const
 {
     return _entries;
@@ -216,7 +216,7 @@ power_stats::shm_seg::begin()
 
 inline
 const std::uint32_t*
-power_stats::shm_seg::end()
+rapl_stats::shm_seg::end()
     const
 {
     return _entries+POWER_ENTRIES;

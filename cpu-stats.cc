@@ -16,7 +16,7 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "cpufreq_stats.h"
-#include "power_stats.h"
+#include "rapl_stats.h"
 #include <iostream>
 #include <string_view>
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
         }
     }
     try {
-        power_stats::data dta(false);
+        rapl_stats::data dta(false);
         dta.to_stream(std::cout, short_output);
     }
     catch (const std::runtime_error& e) {

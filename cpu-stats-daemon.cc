@@ -16,7 +16,7 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "cpufreq_stats.h"
-#include "power_stats.h"
+#include "rapl_stats.h"
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
@@ -122,7 +122,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         iv.it_value.tv_nsec=0;
         iv.it_value.tv_sec=timeout;
         timer_settime(timerid, 0, &iv, 0);
-        power_stats::data p_dta(true);
+        rapl_stats::data r_dta(true);
         cpufreq_stats::data f_dta(true);
 
         sigset_t s;
@@ -139,7 +139,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
                 if (tmr_or != -1) {
                     std::uint32_t weight=tmr_or+1;
                     f_dta.update(weight);
-                    p_dta.update(weight*timeout, weight);
+                    r_dta.update(weight*timeout, weight);
                     if (weight > 1) {
                         syslog(LOG_WARNING,
                                "timer_getoverrun() returned %d", tmr_or);
@@ -163,7 +163,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         }
         {
             std::stringstream s;
-            p_dta.to_stream(s, false);
+            r_dta.to_stream(s, false);
             std::string l;
             while (std::getline(s, l).good()) {
                 syslog(LOG_INFO, "%s", l.c_str());

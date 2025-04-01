@@ -19,9 +19,9 @@ OBJS= \
 cpufreq_stats_cpu.o \
 cpufreq_stats_shm_seg.o \
 cpufreq_stats_data.o \
-power_stats_pkg.o \
-power_stats_shm_seg.o \
-power_stats_data.o \
+rapl_stats_pkg.o \
+rapl_stats_shm_seg.o \
+rapl_stats_data.o \
 tools.o
 
 cpu-stats-daemon: cpu-stats-daemon.o libcpustats.a
@@ -50,9 +50,9 @@ cpu-stats.o: cpu-stats.cc cpufreq_stats.h tools.h
 cpufreq_stats_cpu.o: cpufreq_stats_cpu.cc cpufreq_stats.h tools.h
 cpufreq_stats_shm_seg.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
 cpufreq_stats_data.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
-power_stats_pkg.o: power_stats_pkg.cc power_stats.h tools.h
-power_stats_shm_seg.o: power_stats_shm_seg.cc power_stats.h tools.h
-power_stats_data.o: power_stats_data.cc power_stats.h tools.h
+rapl_stats_pkg.o: rapl_stats_pkg.cc rapl_stats.h tools.h
+rapl_stats_shm_seg.o: rapl_stats_shm_seg.cc rapl_stats.h tools.h
+rapl_stats_data.o: rapl_stats_data.cc rapl_stats.h tools.h
 tools.o: tools.cc tools.h
 
 
