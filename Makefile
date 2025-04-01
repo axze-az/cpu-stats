@@ -22,6 +22,9 @@ cpufreq_stats_data.o \
 rapl_stats_pkg.o \
 rapl_stats_shm_seg.o \
 rapl_stats_data.o \
+amdgpu_stats_hwmon.o \
+amdgpu_stats_shm_seg.o \
+amdgpu_stats_data.o \
 tools.o
 
 cpu-stats-daemon: cpu-stats-daemon.o libcpustats.a
@@ -45,14 +48,18 @@ install: all
 	mkdir -p ${IROOT}/${SBIN_DIR}
 	install -m 0755 -g root -o root cpu-stats-daemon ${IROOT}/${SBIN_DIR}
 
-cpu-stats-daemon.o: cpu-stats-daemon.cc cpufreq_stats.h rapl_stats.h tools.h
-cpu-stats.o: cpu-stats.cc cpufreq_stats.h rapl_stats.h tools.h
+HEADERS=cpufreq_stats.h rapl_stats.h amdgpu_stats.h tools.h 
+cpu-stats-daemon.o: cpu-stats-daemon.cc $(HEADERS)
+cpu-stats.o: cpu-stats.cc $(HEADERS)
 cpufreq_stats_cpu.o: cpufreq_stats_cpu.cc cpufreq_stats.h tools.h
 cpufreq_stats_shm_seg.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
 cpufreq_stats_data.o: cpufreq_stats_shm_seg.cc cpufreq_stats.h tools.h
 rapl_stats_pkg.o: rapl_stats_pkg.cc rapl_stats.h tools.h
 rapl_stats_shm_seg.o: rapl_stats_shm_seg.cc rapl_stats.h tools.h
 rapl_stats_data.o: rapl_stats_data.cc rapl_stats.h tools.h
+amdgpu_stats_hwmon.o: amdgpu_stats_hwmon.cc amdgpu_stats.h tools.h
+amdgpu_stats_shm_seg.o: amdgpu_stats_shm_seg.cc amdgpu_stats.h tools.h
+amdgpu_stats_data.o: amdgpu_stats_data.cc amdgpu_stats.h tools.h
 tools.o: tools.cc tools.h
 
 
