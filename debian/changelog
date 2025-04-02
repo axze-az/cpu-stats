@@ -1,3 +1,9 @@
+cpu-stats (0.6.5) unstable; urgency=medium
+
+  * add power of amdpu hwmon devices
+
+ -- axel <axel.zeuner@gmx.de>  Wed, 02 Apr 2025 16:41:00 +0200
+
 cpu-stats (0.6.0) unstable; urgency=medium
 
   * add power over last interval and last measured frequency to the
