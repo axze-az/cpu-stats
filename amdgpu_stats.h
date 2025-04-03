@@ -32,8 +32,12 @@ namespace amdgpu_stats {
         exists(std::uint32_t no);
 
         static
-        std::uint32_t
+        bool
         is_amdgpu(std::uint32_t no);
+
+        static
+        bool
+        has_ppt(std::uint32_t no);
 
         static
         std::uint64_t

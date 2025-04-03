@@ -31,6 +31,9 @@ amdgpu_stats::data::data(bool create)
         for (size_t i=0; hwmon::exists(i); ++i) {
             if (!hwmon::is_amdgpu(i))
                 continue;
+            // some amdgpu devices do not export power1_input
+            if (!hwmon::has_ppt(i))
+                continue;
             const shm_seg* p=nullptr;
             if (_create) {
                 p=shm_seg::create(i);

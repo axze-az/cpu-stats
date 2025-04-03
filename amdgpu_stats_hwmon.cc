@@ -34,12 +34,19 @@ amdgpu_stats::hwmon::exists(std::uint32_t no)
     return tools::file::exists(p);
 }
 
-std::uint32_t
+bool
 amdgpu_stats::hwmon::is_amdgpu(std::uint32_t no)
 {
     std::string p=path(no) + "name";
     std::string n=tools::sys_fs::read<std::string>::from(p);
     return n=="amdgpu\n";
+}
+
+bool
+amdgpu_stats::hwmon::has_ppt(std::uint32_t no)
+{
+    std::string p=path(no) + "power1_input";
+    return tools::file::exists(p);
 }
 
 std::uint64_t

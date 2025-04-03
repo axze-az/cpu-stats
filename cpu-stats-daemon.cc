@@ -131,7 +131,7 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         sigfillset(&s);
         siginfo_t si;
         syslog(LOG_INFO,
-               "version 0.6.5 startup complete using a timeout of %u seconds.",
+               "version 0.6.6 startup complete using a timeout of %u seconds.",
                timeout);
         bool done=false;
         while (!done) {
