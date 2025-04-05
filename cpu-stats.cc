@@ -24,7 +24,7 @@
 
 int main(int argc, char** argv)
 {
-    bool short_output=false;
+    bool short_output=true;
     if (argc > 1) {
         std::string_view ag1(argv[1]);
         if (ag1=="-v" || ag1=="--version") {
