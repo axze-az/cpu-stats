@@ -15,6 +15,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
+#include "cpu-stats.h"
 #include "cpufreq_stats.h"
 #include "rapl_stats.h"
 #include "amdgpu_stats.h"
@@ -131,7 +132,8 @@ int daemon_main(bool foreground, std::uint32_t timeout)
         sigfillset(&s);
         siginfo_t si;
         syslog(LOG_INFO,
-               "version 0.6.6 startup complete using a timeout of %u seconds.",
+               "version %s startup complete using a timeout of %u seconds.",
+               cpu_stats::version,
                timeout);
         bool done=false;
         while (!done) {
