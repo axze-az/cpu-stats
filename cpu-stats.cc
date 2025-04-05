@@ -27,11 +27,19 @@ int main(int argc, char** argv)
     bool short_output=false;
     if (argc > 1) {
         std::string_view ag1(argv[1]);
-        if (ag1=="-s" || ag1=="--short") {
+        if (ag1=="-v" || ag1=="--version") {
+            std::cout << argv[0] << " version " << cpu_stats::version << '\n';
+            return 0;
+        } else if (ag1=="-s" || ag1=="--short") {
             short_output=true;
+        // } else if (ag1=="-l" || ag1=="--long") {
+        //     short_output=false;
         } else {
-            std::cerr << argv[0] << " [-s|--short]\n"
-                      << "-s|--short  requests short output\n";
+            std::cerr << argv[0]
+                      << " [-v|--version] [-s|--short] [-l|--long] \n"
+                      << "-s|--short   requests short output\n"
+                      // << "-l|--long    requests long output\n"
+                      << "-v|--version displays version informantion\n";
             return 3;
         }
     }
