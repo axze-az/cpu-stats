@@ -1,3 +1,9 @@
+cpu-stats (0.6.8) unstable; urgency=medium
+
+  * send an email to root on shutdown
+
+ -- axel <axel.zeuner@gmx.de>  Sat, 04 Oct 2025 10:30:00 +0200
+
 cpu-stats (0.6.7) unstable; urgency=medium
 
   * add usage/more options to cpu-stats, default to short output
