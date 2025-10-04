@@ -18,4 +18,4 @@
 #include "cpu-stats.h"
 
 const char*
-cpu_stats::version="0.6.7";
+cpu_stats::version="0.6.8";
