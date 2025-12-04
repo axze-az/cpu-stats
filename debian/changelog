@@ -1,4 +1,4 @@
-cpu-stats (0.6.8) unstable; urgency=medium
+cpu-stats (0.6.9) unstable; urgency=medium
 
   * improve email to root sent on shutdown
 
