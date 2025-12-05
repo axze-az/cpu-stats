@@ -23,10 +23,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <cstdint>
 #include <cstddef>
 #include <string>
-#include <fstream>
+#include <streambuf>
+#include <istream>
 
 namespace tools {
 

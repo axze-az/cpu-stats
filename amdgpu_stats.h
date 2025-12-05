@@ -19,6 +19,7 @@
 #define __AMDGPU_STATS_H__ 1
 
 #include <tools.h>
+#include <cstdint>
 #include <vector>
 
 namespace amdgpu_stats {

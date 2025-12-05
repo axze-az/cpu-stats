@@ -20,7 +20,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <iostream>
 
 tools::iarraybuf::
 iarraybuf(const char* base, size_t size)

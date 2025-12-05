@@ -19,6 +19,7 @@
 #define __RAPL_STATS_H__ 1
 
 #include <tools.h>
+#include <cstdint>
 #include <vector>
 
 namespace rapl_stats {
