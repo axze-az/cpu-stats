@@ -5,4 +5,5 @@ cpu-stats
 cpu-stats-daemon
 *~
 .kdev4
+.cache
 compile_commands.json
