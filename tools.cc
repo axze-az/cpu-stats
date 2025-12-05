@@ -20,7 +20,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <fstream>
 #include <iostream>
 
 tools::iarraybuf::
