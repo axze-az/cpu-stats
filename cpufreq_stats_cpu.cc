@@ -17,7 +17,6 @@
 //
 #include "cpufreq_stats.h"
 #include <sstream>
-#include <fstream>
 
 std::string
 cpufreq_stats::cpu::path(std::uint32_t cpu)
