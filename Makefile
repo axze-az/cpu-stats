@@ -42,6 +42,7 @@ clean:
 
 distclean: clean
 	-$(RM) *~
+	-$(RM) compile_commands.json
 
 install: all
 	mkdir -p ${IROOT}/${BIN_DIR}
@@ -63,3 +64,7 @@ amdgpu_stats_hwmon.o: amdgpu_stats_hwmon.cc amdgpu_stats.h tools.h
 amdgpu_stats_shm_seg.o: amdgpu_stats_shm_seg.cc amdgpu_stats.h tools.h
 amdgpu_stats_data.o: amdgpu_stats_data.cc amdgpu_stats.h tools.h
 tools.o: tools.cc tools.h
+
+compile_commands.json:
+	$(MAKE) clean
+	bear -- $(MAKE)
