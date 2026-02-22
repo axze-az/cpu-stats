@@ -22,9 +22,27 @@
 #include <iostream>
 #include <string_view>
 
+
+namespace {
+    void
+    usage(const std::string_view& argv0)
+    {
+	std::cerr << argv0
+		  << " [-v|--version] [-s|--short] [-l|--long] \n"
+		  << "-s|--short     requests short output\n"
+		  << "-l|--long      requests long output\n"
+		  << "-p|--power     requests power output only\n"
+		  << "-f|--frequency requests frequency output only\n"
+		  << "-v|--version   displays version informantion\n";
+	std::exit(3);
+    }
+}
+
 int main(int argc, char** argv)
 {
     bool short_output=true;
+    bool power_only=false;
+    bool frequency_only=false;
     for (int argi = 1; argi < argc; ++argi) {
         std::string_view ag(argv[argi]);
         if (ag=="-v" || ag=="--version") {
@@ -34,38 +52,45 @@ int main(int argc, char** argv)
             short_output=true;
         } else if (ag=="-l" || ag=="--long") {
             short_output=false;
+        } else if (ag=="-p" || ag=="--power") {
+            power_only=true;
+        } else if (ag=="-f" || ag=="--frequency") {
+	    frequency_only=true;
         } else {
-            std::cerr << argv[0]
-                      << " [-v|--version] [-s|--short] [-l|--long] \n"
-                      << "-s|--short   requests short output\n"
-                      << "-l|--long    requests long output\n"
-                      << "-v|--version displays version informantion\n";
-            return 3;
+	    usage(argv[0]);
         }
     }
-    try {
-        rapl_stats::data dta(false);
-        dta.to_stream(std::cout, short_output);
+    bool output_power=(power_only==false && frequency_only==false) ||
+	(power_only==true);
+    bool output_frequency=(power_only==false && frequency_only==false) ||
+	(frequency_only==true);
+    if (output_power) {
+	try {
+	    rapl_stats::data dta(false);
+	    dta.to_stream(std::cout, short_output);
+	}
+	catch (const std::runtime_error& e) {
+	    std::cerr << e.what() << '\n';
+	    std::cerr << "Is the daemon running?\n";
+	}
+	try {
+	    amdgpu_stats::data dta(false);
+	    dta.to_stream(std::cout, short_output);
+	}
+	catch (const std::runtime_error& e) {
+	    std::cerr << e.what() << '\n';
+	    std::cerr << "Is the daemon running?\n";
+	}
     }
-    catch (const std::runtime_error& e) {
-        std::cerr << e.what() << '\n';
-        std::cerr << "Is the daemon running?\n";
-    }
-    try {
-        amdgpu_stats::data dta(false);
-        dta.to_stream(std::cout, short_output);
-    }
-    catch (const std::runtime_error& e) {
-        std::cerr << e.what() << '\n';
-        std::cerr << "Is the daemon running?\n";
-    }
-    try {
-        cpufreq_stats::data dta(false);
-        dta.to_stream(std::cout, short_output);
-    }
-    catch (const std::runtime_error& e) {
-        std::cerr << e.what() << '\n';
-        std::cerr << "Is the daemon running?\n";
+    if (output_frequency) {
+	try {
+	    cpufreq_stats::data dta(false);
+	    dta.to_stream(std::cout, short_output);
+	}
+	catch (const std::runtime_error& e) {
+	    std::cerr << e.what() << '\n';
+	    std::cerr << "Is the daemon running?\n";
+	}
     }
     return 0;
 }
