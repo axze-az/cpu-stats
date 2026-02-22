@@ -1,3 +1,9 @@
+cpu-stats (0.6.10) unstable; urgency=medium
+
+  * add -p and -f options to cpu-stats
+
+ -- axel <axel.zeuner@gmx.de>  Sun, 16 Feb 2026 16:20:00 +0100
+
 cpu-stats (0.6.9) unstable; urgency=medium
 
   * improve email to root sent on shutdown
