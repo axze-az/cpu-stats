@@ -65,6 +65,6 @@ amdgpu_stats_shm_seg.o: amdgpu_stats_shm_seg.cc amdgpu_stats.h tools.h
 amdgpu_stats_data.o: amdgpu_stats_data.cc amdgpu_stats.h tools.h
 tools.o: tools.cc tools.h
 
-compile_commands.json:
+compile_commands.json: Makefile
 	$(MAKE) distclean
 	bear -- $(MAKE)
